@@ -47,8 +47,27 @@ class Sudoku:
                         if np.sum(self.candidates[r,c]) == 1:
                             self.solution[r,c] = np.where(self.candidates[r,c] == 1)[0][0] + 1
                             self.update_candidates(r,c)
-                            updating += 1
-                            continue
+                            updating = 1
+                            
+                            
+            # update solution if a single candidate is left in a row or column
+            for cipher in range(9):
+                for r in range(9):
+                    if np.sum(self.candidates[r,:,cipher]) == 1:
+                        column_identified = np.where(self.candidates[r,:,cipher] == 1)[0][0]
+                        if self.solution[r,column_identified] == 0:
+                            self.solution[r,column_identified] = cipher + 1
+                            self.update_candidates(r,column_identified)
+                            updating = 1
+                for c in range(9):
+                    if np.sum(self.candidates[:,c,cipher]) == 1:
+                        row_identified = np.where(self.candidates[:,c,cipher] == 1)[0][0]
+                        if self.solution[row_identified,c] == 0:
+                            self.solution[row_identified,c] = cipher + 1
+                            self.update_candidates(row_identified,c)
+                            updating = 1    
+            
+            # update solution if a single candidate is left in a quadrant
                     
 
 
@@ -67,7 +86,8 @@ matrix = np.array([[0,0,2,9,3,0,4,0,6],
                [5,0,1,0,0,0,7,0,8],
                [4,0,9,0,8,1,3,0,0]])
 
-sudoku_string = "504670103000000004090008670007800009005030800800006300083900050400000000106023708"
+sudoku_string1 = "504670103000000004090008670007800009005030800800006300083900050400000000106023708"
+sudoku_string2 = "000000080097000006800500329020301040060020070030608090386005004100000930040000000"
 
 def string_to_matrix(sudoku_as_simple_string):
     assert len(sudoku_as_simple_string) == 81
@@ -80,6 +100,6 @@ def string_to_matrix(sudoku_as_simple_string):
 
 if __name__ == '__main__':    
    #test_sudoku = Sudoku(matrix)
-   test_sudoku = Sudoku(string_to_matrix(sudoku_string))
+   test_sudoku = Sudoku(string_to_matrix(sudoku_string2))
    print(test_sudoku.input_matrix)
    print(test_sudoku.solution)
