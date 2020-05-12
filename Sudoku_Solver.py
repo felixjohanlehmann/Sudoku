@@ -66,9 +66,23 @@ class Sudoku:
                             self.solution[row_identified,c] = cipher + 1
                             self.update_candidates(row_identified,c)
                             updating = 1    
-            
-            # update solution if a single candidate is left in a quadrant
-                    
+                # update solution if a single candidate is left in a quadrant
+                for index1 in range(3):
+                    for index2 in range(3):
+                        if np.sum(self.candidates[(index1 * 3):(index1 * 3) + 3,
+                                                  (index2 * 3):(index2 * 3) + 3,
+                                                  cipher]) == 1:
+                            row_identified = np.where(self.candidates[(index1 * 3):(index1 * 3) + 3,
+                                                  (index2 * 3):(index2 * 3) + 3,
+                                                  cipher] == 1)[0][0]
+                            column_identified = np.where(self.candidates[(index1 * 3):(index1 * 3) + 3,
+                                                  (index2 * 3):(index2 * 3) + 3,
+                                                  cipher] == 1)[0][1] 
+                            if self.solution[row_identified,column_identified] == 0:
+                                self.solution[row_identified,column_identified] = cipher + 1
+                                self.update_candidates(row_identified,column_identified)
+                                updating = 1
+               
 
 
 
